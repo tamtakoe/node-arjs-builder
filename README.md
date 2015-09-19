@@ -167,7 +167,7 @@ You can see current project manifest (with extra fields) in `window.project`
 }
 ```
 
-#### modules, vendor, <every module params>####
+#### modules, vendor, every module params####
 
 `modules` and `vendor` is a map with modules configs. Configs from `modules` merge on corresponding modules with `<every module params>`
 
