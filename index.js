@@ -103,7 +103,7 @@ function createBuilder(options) {
         }
 
         return configs.forEach('localhost.webserver', startWebServer)
-            .pipe(msg.flush.info('', 'Webservers successfully started!', '-'));
+            .pipe(msg.flush.info('', 'Webservers started!', '-'));
     }
 
     function compileStyles(params) {
@@ -164,7 +164,7 @@ function createBuilder(options) {
             }
         });
 
-        return totalStream.pipe(msg.flush.info('', 'Styles compiled', '-'));
+        return totalStream.pipe(msg.flush.info('', 'Styles compiled!', '-'));
     }
 
     function copy() {
@@ -209,7 +209,7 @@ function createBuilder(options) {
 
 
                 return totalStream
-                    .pipe(msg.flush.info('', 'Vendors successfully created!', '-'))
+                    .pipe(msg.flush.info('', 'Vendors created!', '-'))
                     .pipe(through.obj(function(file, enc, cb) {cb(null, file);}, function(callback) {
                         callback();
                         stream.end();
