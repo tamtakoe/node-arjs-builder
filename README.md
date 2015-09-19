@@ -9,9 +9,9 @@ npm install arjs-builder
 ```
 
 ## Usage
-F. e. we have two projects: `main`, `admin` and two types of environments: `dev`, `production`
+Example of application structure. Also see [node-projects-config documentations](https://github.com/tamtakoe/node-projects-config)
 ```
-_configs/        * local configs
+_configs/      * local configs
 public/
  ├──admin/     * project
  ├──build/     * bulded projects
@@ -21,8 +21,6 @@ public/
  └──vendor/    * bower libraries
 ```
 
-**_configs** see [node-projects-config documentations](https://github.com/tamtakoe/node-projects-config)
-
 ```js
 //gulpfile.js
 var gulp = require('gulp');
@@ -30,7 +28,7 @@ var arjs = require('arjs-builder')();
 
 gulp.task('build', arjs.build);
 gulp.task('test', arjs.test);
-gulp.task('default', arjs.run);
+gulp.task('default', arjs.run); //compile and run local servers
 ```
 
 ## API
@@ -98,6 +96,9 @@ Set `EventEmitter._maxListeners`. Increase this value if there are EventEmitter 
 
 
 ## Config API
+
+Structure
+
 ```js
 //default.json
 {
@@ -121,7 +122,6 @@ Set `EventEmitter._maxListeners`. Increase this value if there are EventEmitter 
 Config for web. This will be export to `window.project.config`
 
 ```js
-//example
 {
     resources: {
         api: '//my-site/api/v1'
@@ -138,7 +138,6 @@ Config development on local device.
 Config for local webserver. May be array of configs for several servers. See [node-webserver-lite documentation](https://github.com/tamtakoe/node-webserver-lite)
 
 ```js
-//example
 {
     root: 'build',
     port: 7200,
@@ -153,7 +152,7 @@ Paths for builded files add to manifest of builded projects.
 You can see current project manifest (with extra fields) in `window.project`
 
 ```js
-//example of localhost manifest
+//localhost manifest
 {
     resources: {
         js: [{ //only for localhost
@@ -173,7 +172,7 @@ You can see current project manifest (with extra fields) in `window.project`
 `modules` and `vendor` is a map with modules configs. Configs from `modules` merge on corresponding modules with `<every module params>`
 
 ```js
-//example build
+//build
 {
     styles: [
         'main/import.styl' //add to each module including vendor and common
@@ -204,7 +203,7 @@ You can see current project manifest (with extra fields) in `window.project`
 }
 ```
 ```js
-//example vendor. You can compile custom bundles of vendors
+//vendor. You can compile custom bundles of vendors
 {
     angularStrap: { //module name to compiled directory
         rev: false, //don't uglify module name
