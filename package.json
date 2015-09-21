@@ -1,7 +1,7 @@
 {
   "name": "arjs-builder",
   "description": "Builder for AngularJS + RequireJS projects",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "author": {
     "name": "tamtakoe",
     "email": "tamtakoe@gmail.com"
@@ -40,7 +40,7 @@
     "inline-source": "^4.1.1",
     "merge-stream": "^1.0.0",
     "lodash": "^3.10.1",
-    "projects-config": "^0.0.3",
+    "projects-config": "^0.0.4",
     "stream-series": "^0.1.1",
     "through2": "^2.0.0",
     "webserver-lite": "^0.0.1",

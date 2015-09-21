@@ -11,7 +11,7 @@ npm install arjs-builder
 ## Usage
 Example of application structure. Also see [node-projects-config documentations](https://github.com/tamtakoe/node-projects-config)
 ```
-_configs/      * local configs
+configs/       * local configs
 public/
  ├──admin/     * project
  ├──build/     * bulded projects
@@ -41,7 +41,7 @@ Return instance of builder
 ##### localConfigsPath
 Type: `String`
 
-Default: `process.cwd() + '/_configs'`
+Default: `process.cwd() + '/configs'`
 
 Folder for local configs.
 

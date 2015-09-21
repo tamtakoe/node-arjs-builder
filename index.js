@@ -27,7 +27,7 @@ msg.Success('--', 'Enviroment: <%= env.NODE_ENV %>. Project: <%= env.PROJECT %>'
 var rootPath = process.cwd();
 var defaults = {
     publicPath:       path.join(rootPath, 'public'),
-    localConfigsPath: path.join(rootPath, '_configs'),
+    localConfigsPath: path.join(rootPath, 'configs'),
     karmaConfigPath:  path.join(rootPath, 'karma.conf.js'),
     configsDir:       '*/_config',
     compiledDir:      'compiled',
