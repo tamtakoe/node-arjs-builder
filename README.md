@@ -12,7 +12,7 @@ npm install arjs-builder
 Example of application structure. Also see [node-projects-config documentations](https://github.com/tamtakoe/node-projects-config)
 ```
 configs/       * local configs
-public/
+projects/
  ├──admin/     * project
  ├──build/     * bulded projects
  ├──compiled/  * compiled files for local work
@@ -52,10 +52,10 @@ Default: `process.cwd() + '/karma.conf.js'`
 
 Path to Karma config
 
-##### publicPath
+##### projectsPath
 Type: `String`
 
-Default: `process.cwd() + '/public'`
+Default: `process.cwd() + '/projects'`
 
 Root folder for projects etc.
 
@@ -86,6 +86,13 @@ Type: `String`
 Default: `'files'`
 
 Assets (big images, fonts, video) which don't include into css-files. Better to store on a separate file server
+
+##### vendorDir
+Type: `String`
+
+Default: `'vendor'`
+
+Vendor libraries (f.e. from bower)
 
 ##### maxListeners
 Type: `Number`

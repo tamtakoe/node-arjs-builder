@@ -26,22 +26,24 @@ msg.Success('--', 'Enviroment: <%= env.NODE_ENV %>. Project: <%= env.PROJECT %>'
 
 var rootPath = process.cwd();
 var defaults = {
-    publicPath:       path.join(rootPath, 'public'),
+    projectsPath:     path.join(rootPath, 'projects'),
     localConfigsPath: path.join(rootPath, 'configs'),
     karmaConfigPath:  path.join(rootPath, 'karma.conf.js'),
     configsDir:       '*/_config',
     compiledDir:      'compiled',
     buildDir:         'build',
     filesDir:         'files',
+    vendorDir:        'vendor',
     maxListeners:     100
 };
 
 function createBuilder(options) {
     var opts = _.defaults(options || {}, defaults);
 
-    opts.configsPath  = path.join(opts.publicPath, opts.configsDir);
-    opts.compiledPath = path.join(opts.publicPath, opts.compiledDir);
-    opts.buildPath    = path.join(opts.publicPath, opts.buildDir);
+    opts.configsPath  = path.join(opts.projectsPath, opts.configsDir);
+    opts.compiledPath = path.join(opts.projectsPath, opts.compiledDir);
+    opts.buildPath    = path.join(opts.projectsPath, opts.buildDir);
+    opts.projectsDir  = path.basename(opts.projectsPath);
 
     events.EventEmitter.prototype._maxListeners = opts.maxListeners;
 
@@ -83,14 +85,14 @@ function createBuilder(options) {
     function webserver() {
         var defaultSettings = {
             fallback: 'index.html',
-            root: opts.publicPath
+            root: opts.projectsPath
         };
 
         var livereloadPort = 2300;
 
         function startWebServer(settings, name) {
             if (settings.root) {
-                settings.root = path.resolve(opts.publicPath, settings.root);
+                settings.root = path.resolve(opts.projectsPath, settings.root);
             }
 
             if (settings.livereload === true) {
@@ -125,8 +127,8 @@ function createBuilder(options) {
                 projectsSrcCache[projectName] = [];
 
                 projectSrcStream = amdOptimize.src(projectName + '/bootstrap', {
-                    baseUrl: opts.publicPath,
-                    configFile: path.join(opts.publicPath, projectName, 'requireconfig.js')
+                    baseUrl: opts.projectsPath,
+                    configFile: path.join(opts.projectsPath, projectName, 'requireconfig.js')
                 })
                     .pipe(through.obj(function(file, enc, callback) {
                         projectsSrcCache[projectName].push(file);
@@ -138,7 +140,7 @@ function createBuilder(options) {
             }
 
             return projectSrcStream.pipe(msg.flush.info('', projectName + ' styles compiled', '-'))
-                .pipe(compileProject(opts.publicPath, {
+                .pipe(compileProject(opts.projectsPath, _.merge({
                     styleOnly: true,
                     rev: false,
                     includeCss: false,
@@ -146,15 +148,15 @@ function createBuilder(options) {
                     combine: 'style',
                     styles: config.build.styles,
                     cache: moduleName
-                }))
+                }, opts)))
                 .pipe(msg.flush.info('', projectName + ' styles compiled', '-'))
                 .pipe(gulp.dest(path.join(opts.compiledPath, projectName)));
         }
 
         var totalStream = configs.forEach(function(config, projectName) {
             if (params.watch) {
-                return gulpWatch(path.join(opts.publicPath, projectName, '**/!(.html, .js)'), function(file) {
-                    var changedProjectInfo = utils.projectInfoFromPath(file.path, opts.publicPath);
+                return gulpWatch(path.join(opts.projectsPath, projectName, '**/!(.html, .js)'), function(file) {
+                    var changedProjectInfo = utils.projectInfoFromPath(file.path, opts.projectsPath, opts);
 
                     return compileProjectStyle(projectName, config, changedProjectInfo.moduleName)
                         .pipe(livereload());
@@ -173,10 +175,10 @@ function createBuilder(options) {
         });
 
         //copy favicon and files folder to build
-        var faviconStream = gulp.src(path.join(opts.publicPath, '/favicon.ico'))
+        var faviconStream = gulp.src(path.join(opts.projectsPath, '/favicon.ico'))
             .pipe(gulp.dest(opts.buildPath));
 
-        var filesStream = gulp.src(path.join(opts.publicPath, opts.filesDir, '**/*'))
+        var filesStream = gulp.src(path.join(opts.projectsPath, opts.filesDir, '**/*'))
             .pipe(gulp.dest(path.join(opts.buildPath, opts.filesDir)));
 
         configs.forEach(function(config, projectName) {
@@ -199,10 +201,10 @@ function createBuilder(options) {
                         return;
                     }
 
-                    return compileProject.src(opts.publicPath, {
+                    return compileProject.src(opts.projectsPath,  _.merge({
                         modules: config.vendor
-                    })
-                        .pipe(gulp.dest(path.join(opts.compiledPath, projectName, 'vendor')))
+                    }, opts))
+                        .pipe(gulp.dest(path.join(opts.compiledPath, projectName, opts.vendorDir)))
                         .pipe(msg.flush.info('', 'Vendor for <%= project %> is created', '-', config));
                 });
 
@@ -226,13 +228,13 @@ function createBuilder(options) {
             .on('end', function() {
                 return configs.forEach(function(config, projectName) {
                     return amdOptimize.src(projectName + '/bootstrap', {
-                        baseUrl: opts.publicPath,
-                        configFile: path.join(opts.publicPath, projectName, 'requireconfig.js')
+                        baseUrl: opts.projectsPath,
+                        configFile: path.join(opts.projectsPath, projectName, 'requireconfig.js')
                     })
-                        .pipe(compileProject(opts.publicPath, config.build))
+                        .pipe(compileProject(opts.projectsPath, _.merge(config.build, opts)))
                         .pipe(msg.flush.info('', 'Project <%= project %> is compiled', '-', config))
                 })
-                    .pipe(compileIndex(opts.publicPath, {configWrap: 'window.manifests = <%= contents %>'}))
+                    .pipe(compileIndex(opts.projectsPath, {configWrap: 'window.manifests = <%= contents %>'}))
                     .pipe(msg.flush.info('', 'Build for <%= env.NODE_ENV %> completed!', '-'))
                     .pipe(through.obj(function(file, enc, cb) {cb(null, file);}, function(callback) {
                         callback();
@@ -259,10 +261,10 @@ function createBuilder(options) {
             ],
             requirejsPreprocessor: {
                 config: {
-                    baseUrl: '/base/public/',
+                    baseUrl: '/base/' + opts.projectsDir + '/',
                     paths: {
-                        angular: 'vendor/angular/angular', //for no-angular projects
-                        angularMocks: 'vendor/angular-mocks/angular-mocks'
+                        angular: opts.vendorDir + '/angular/angular', //for no-angular projects
+                        angularMocks: opts.vendorDir + '/angular-mocks/angular-mocks'
                     },
                     shim:  {
                         angularMocks: ['angular']
@@ -273,7 +275,7 @@ function createBuilder(options) {
                 }
             },
             exclude: [
-                'public/vendor/**/*spec.js'
+                opts.projectsDir + '/' + opts.vendorDir + '/**/*spec.js'
             ]
         };
 
@@ -304,18 +306,18 @@ function createBuilder(options) {
             }
 
             karmaConfig.files = [
-                {pattern: 'public/vendor/**/*.js', included: false, watched: false},
-                {pattern: 'public/compiled/' + projectName + '/**/*.js', included: false, watched: false},
-                {pattern: 'public/' + projectName + '/**/!(requireconfig).js', included: false},
-                {pattern: 'public/' + projectName + '/**/*.html', included: false},
-                'public/compiled/manifests.js',
-                'public/lib.js',
+                {pattern: opts.projectsDir + '/' + opts.vendorDir + '/**/*.js', included: false, watched: false},
+                {pattern: opts.projectsDir + '/' + opts.compiledDir + '/' + projectName + '/**/*.js', included: false, watched: false},
+                {pattern: opts.projectsDir + '/' + projectName + '/**/!(requireconfig).js', included: false},
+                {pattern: opts.projectsDir + '/' + projectName + '/**/*.html', included: false},
+                opts.projectsDir + '/' + opts.compiledDir +'/manifests.js',
+                opts.projectsDir + '/lib.js',
                 // needs to be last http://karma-runner.github.io/0.12/plus/requirejs.html
-                'public/' + projectName + '/requireconfig.js'
+                opts.projectsDir + '/' + projectName + '/requireconfig.js'
             ];
             karmaConfig.preprocessors = {};
-            karmaConfig.preprocessors['public/' + projectName + '/**/*.html'] = 'ng-html2js';
-            karmaConfig.preprocessors['public/' + projectName + '/requireconfig.js'] = 'requirejs';
+            karmaConfig.preprocessors[opts.projectsDir + '/' + projectName + '/**/*.html'] = 'ng-html2js';
+            karmaConfig.preprocessors[opts.projectsDir + '/' + projectName + '/requireconfig.js'] = 'requirejs';
 
             return new karma.Server(karmaConfig, done);
         }
