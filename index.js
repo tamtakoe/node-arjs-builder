@@ -155,7 +155,7 @@ function createBuilder(options) {
 
         var totalStream = configs.forEach(function(config, projectName) {
             if (params.watch) {
-                return gulpWatch(path.join(opts.projectsPath, projectName, '**/!(.html, .js)'), function(file) {
+                return gulpWatch(path.join(opts.projectsPath, projectName, '**', '!(*.html|*.js)'), function(file) {
                     var changedProjectInfo = utils.projectInfoFromPath(file.path, opts.projectsPath, opts);
 
                     return compileProjectStyle(projectName, config, changedProjectInfo.moduleName)
