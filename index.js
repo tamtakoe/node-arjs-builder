@@ -139,7 +139,7 @@ function createBuilder(options) {
                     }));
             }
 
-            return projectSrcStream.pipe(msg.flush.info('', projectName + ' styles compiled', '-'))
+            return projectSrcStream.pipe(msg.flush.info('', projectName + ' styles compiled' + (params.watch ? '. Listening...' : ''), '-'))
                 .pipe(compileProject(opts.projectsPath, _.merge({
                     styleOnly: true,
                     rev: false,
