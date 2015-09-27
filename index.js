@@ -34,7 +34,8 @@ var defaults = {
     buildDir:         'build',
     filesDir:         'files',
     vendorDir:        'vendor',
-    maxListeners:     100
+    maxListeners:     100,
+    browsers:         ['chrome >= 35', 'ff >= 20', 'safari >= 7', 'ie >= 10', 'opera >= 12.10', 'android >= 4.4', 'ios >= 7', 'phantomjs >= 1.9']
 };
 
 function createBuilder(options) {
@@ -61,7 +62,8 @@ function createBuilder(options) {
                 manifest: {
                     env: 'local',
                     name: projectName,
-                    config: publicConfig
+                    config: publicConfig,
+                    browsers: opts.browsers
                 }
             },
             build: {
@@ -70,7 +72,8 @@ function createBuilder(options) {
                 manifest: {
                     env: env,
                     name: projectName,
-                    config: publicConfig
+                    config: publicConfig,
+                    browsers: opts.browsers
                 }
             }
         };
@@ -139,7 +142,7 @@ function createBuilder(options) {
                     }));
             }
 
-            return projectSrcStream.pipe(msg.flush.info('', projectName + ' styles compiled' + (params.watch ? '. Listening...' : ''), '-'))
+            return projectSrcStream.pipe(msg.flush.info('', projectName + ' styles compiled', '-'))
                 .pipe(compileProject(opts.projectsPath, _.merge({
                     styleOnly: true,
                     rev: false,
@@ -156,10 +159,11 @@ function createBuilder(options) {
         var totalStream = configs.forEach(function(config, projectName) {
             if (params.watch) {
                 return gulpWatch(path.join(opts.projectsPath, projectName, '**', '!(*.html|*.js)'), function(file) {
-                    var changedProjectInfo = utils.projectInfoFromPath(file.path, opts.projectsPath, opts);
+                    var projectInfo = utils.projectInfoFromPath(file.path, opts.projectsPath, opts);
 
-                    return compileProjectStyle(projectName, config, changedProjectInfo.moduleName)
-                        .pipe(livereload());
+                    return compileProjectStyle(projectName, config, projectInfo.moduleName)
+                        .pipe(livereload())
+                        .pipe(msg.flush.note('Listening...'));
                 });
             } else {
                 return compileProjectStyle(projectName, config);
@@ -333,7 +337,7 @@ function createBuilder(options) {
     }
 
     function run() {
-        return series(compile(), webserver(), watch());
+        return series(webserver(), compile().pipe(msg.flush.note('Listening...')), watch());
     }
 
     return {
