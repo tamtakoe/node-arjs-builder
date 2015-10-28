@@ -1,7 +1,7 @@
 {
   "name": "arjs-builder",
   "description": "Builder for AngularJS + RequireJS projects",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "author": {
     "name": "tamtakoe",
     "email": "tamtakoe@gmail.com"
@@ -59,6 +59,7 @@
     "gulp-add-imported-styles": "^0.0.3",
     "gulp-amd": "^0.0.1",
     "gulp-resource-cache": "^0.0.1",
+    "gulp-remote-src": "^0.4.0",
     "gulp-autoprefixer": "^3.0.1",
     "gulp-base64": "^0.1.3",
     "gulp-clip-empty-files": "^0.1.1",
