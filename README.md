@@ -125,7 +125,8 @@ Structure
         <every module params>
         ...
         manifest: { ... },
-        modules: { ... }
+        modules: { ... },
+        copy: { ... }
     },
     vendor: { ... },
 }
@@ -133,7 +134,7 @@ Structure
 
 #### public ####
 
-Config for web. This will be export to `window.project.config`
+Config for web. It will be export to `window.project.config`
 
 ```js
 {
@@ -145,7 +146,7 @@ Config for web. This will be export to `window.project.config`
 
 #### localhost ####
 
-Config development on local device.
+Config for development on local device.
 
 #### webserver ####
 
@@ -163,37 +164,82 @@ Config for local webserver. May be array of configs for several servers. See [no
 
 List of resources which will be included to index.html as link or scripts tags.
 Paths for builded files add to manifest of builded projects.
-You can see current project manifest (with extra fields) in `window.project`
+You can see current project manifest (with extra fields) in `window.project`.
+For local and builded project uses different manifests.
 
 ```js
 //localhost manifest
 {
     resources: {
-        js: [{ //only for localhost
+        js: [{ //load require.js
             'src': 'vendor/requirejs/require.js'
             'data-main': 'main/requireconfig'
         }],
         css: [
             '//fonts.googleapis.com/css?family=Open+Sans:300italic,300,700,600,400&subset=cyrillic-ext,latin-ext',
-            'compiled/main/vendor/bootstrap.css', //only for localhost. You can include vendor's styles to vendor module
-            'compiled/main/style.css', //only for localhost
+            'compiled/main/vendor/bootstrap.css', //You can include vendor's styles to vendor module
+            'compiled/main/style.css',
         ]
 }
 ```
 
-#### modules, vendor ####
+```js
+//build manifest
+{
+    browsers: ["chrome >= 30", "ff >= 20", "safari >= 7", "ie >= 10", "opera >= 12.10", "android >= 4.4", "ios >= 7", "phantomjs >= 1.9"],
+    resources: {
+        html: [
+            'main/common/directives/header/template.html', //You can cache some templates, wich will be showed until js-framework loaded
+            'main/common/directives/headerMenu/template.html'
+        ],
+        css: [
+            '//fonts.googleapis.com/css?family=Open+Sans:300italic,300,700,600,400&subset=cyrillic-ext,latin-ext',
+            /* <project styles are added automatically during build of the project> */
+        ],
+        /* js: [<project modules are added automatically during build of the project>] */
+}
+```
 
-`modules` and `vendor` is a map with modules configs. Configs from `modules` merge on corresponding modules with `<every module params>`
+#### build ####
+
+Config for build project for final testing and production
+
+#### copy ####
+
+`copy` is a map where keys are [Glob](https://github.com/isaacs/node-glob)-pattern of source files relative to project directory,
+and values — destination paths or filenames relative to build directory.
+
+```js
+//default value of `copy`
+{
+    'favicon.ico': 'favicon.ico', //copy file to build directory
+    'files/**': 'files/' //copy folder to build directory. (`files` is value from `filesDir` option)
+}
+```
+
+You can add custom files for copying in your config:
+
+```js
+{
+    'robots.txt': 'robots.txt'
+}
+```
+
+#### modules ####
+
+`modules` is a map with modules configs. Configs from `modules` merge on corresponding modules with `<every module params>`
 
 ```js
 //build
 {
+    //every module params
     styles: [
         'main/import.styl' //add to each module including vendor and common
     ],
     inlineImgToCss: true,
     includeCss: true,
     uglifyJs: false,
+    //
     
     modules: {
         vendor: {
@@ -216,8 +262,13 @@ You can see current project manifest (with extra fields) in `window.project`
     }
 }
 ```
+
+#### vendor ####
+
+Has structure like `modules`. You can compile custom bundles of vendors
+
 ```js
-//vendor. You can compile custom bundles of vendors
+//vendor
 {
     angularStrap: { //module name to compiled directory
         rev: false, //don't uglify module name

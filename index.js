@@ -8,6 +8,7 @@ var del             = require('del');
 var gulp            = require('gulp');
 var gulpWatch       = require('gulp-watch');
 var gulpWrap        = require('gulp-wrap');
+var gulpRename      = require('gulp-rename');
 var livereload      = require('gulp-livereload');
 var msg             = require('gulp-msg');
 var amdOptimize     = require('amd-optimize');
@@ -55,7 +56,7 @@ function createBuilder(options) {
 
         publicConfig.project = projectName;
 
-        return {
+        var defaults = {
             project: projectName,
             localhost: {
                 project: projectName,
@@ -74,9 +75,15 @@ function createBuilder(options) {
                     name: projectName,
                     config: publicConfig,
                     browsers: opts.browsers
+                },
+                copy: {
+                    'favicon.ico': 'favicon.ico'
                 }
             }
         };
+        defaults.build.copy[opts.filesDir + '/**'] = opts.filesDir + '/';
+
+        return defaults;
     }
 
     function config() {
@@ -130,9 +137,9 @@ function createBuilder(options) {
                 projectsSrcCache[projectName] = [];
 
                 projectSrcStream = amdOptimize.src(projectName + '/bootstrap', {
-                    baseUrl: opts.projectsPath,
-                    configFile: path.join(opts.projectsPath, projectName, 'requireconfig.js')
-                })
+                        baseUrl: opts.projectsPath,
+                        configFile: path.join(opts.projectsPath, projectName, 'requireconfig.js')
+                    })
                     .pipe(through.obj(function(file, enc, callback) {
                         projectsSrcCache[projectName].push(file);
                         callback(null, file);
@@ -174,25 +181,38 @@ function createBuilder(options) {
     }
 
     function copy() {
+        var streams = [], generalCopiesMap = {};
+
         configs.forEach(function(config, projectName) { //clean build folder
             del.sync(path.join(opts.buildPath, projectName, '**/!(index.html)')); //except index because it conflicts with livereload
         });
 
-        //copy favicon and files folder to build
-        var faviconStream = gulp.src(path.join(opts.projectsPath, '/favicon.ico'))
-            .pipe(gulp.dest(opts.buildPath));
-
-        var filesStream = gulp.src(path.join(opts.projectsPath, opts.filesDir, '**/*'))
-            .pipe(gulp.dest(path.join(opts.buildPath, opts.filesDir)));
-
         configs.forEach(function(config, projectName) {
-            if (config.build.index) {
-                faviconStream.pipe(gulp.dest(path.join(opts.buildPath, projectName)));
-                filesStream.pipe(gulp.dest(path.join(opts.buildPath, projectName, opts.filesDir)));
+            if (config.build.index) { //copying for local projects
+                streams = streams.concat(copy(config.build.copy, opts.projectsPath, path.join(opts.buildPath, projectName)));
+            } else {
+                _.extend(generalCopiesMap, config.build.copy);
             }
         });
 
-        return series(faviconStream, filesStream);
+        streams = streams.concat(copy(generalCopiesMap, opts.projectsPath, opts.buildPath)); //copying for other projects
+
+        function copy(copiesMap, projectsPath, buildPath) {
+            return _.map(copiesMap, function(dstPath, srcPath) {
+                if (/\/$/.test(dstPath)) {
+                    //copy directory
+                    return gulp.src(path.join(projectsPath, srcPath))
+                        .pipe(gulp.dest(path.join(buildPath, dstPath)));
+                } else {
+                    //copy file
+                    return gulp.src(path.join(projectsPath, srcPath))
+                        .pipe(gulpRename(dstPath))
+                        .pipe(gulp.dest(buildPath));
+                };
+            });
+        }
+
+        return series.apply(series, streams);
     }
 
     function compileVendor() {
@@ -206,8 +226,8 @@ function createBuilder(options) {
                     }
 
                     return compileProject.src(opts.projectsPath,  _.merge({
-                        modules: config.vendor
-                    }, opts))
+                            modules: config.vendor
+                        }, opts))
                         .pipe(gulp.dest(path.join(opts.compiledPath, projectName, opts.vendorDir)))
                         .pipe(msg.flush.info('', 'Vendor for <%= project %> is created', '-', config));
                 });
@@ -231,13 +251,13 @@ function createBuilder(options) {
         series(copy(), compileVendor())
             .on('end', function() {
                 return configs.forEach(function(config, projectName) {
-                    return amdOptimize.src(projectName + '/bootstrap', {
-                        baseUrl: opts.projectsPath,
-                        configFile: path.join(opts.projectsPath, projectName, 'requireconfig.js')
+                        return amdOptimize.src(projectName + '/bootstrap', {
+                                baseUrl: opts.projectsPath,
+                                configFile: path.join(opts.projectsPath, projectName, 'requireconfig.js')
+                            })
+                            .pipe(compileProject(opts.projectsPath, _.merge(config.build, opts)))
+                            .pipe(msg.flush.info('', 'Project <%= project %> is compiled', '-', config))
                     })
-                        .pipe(compileProject(opts.projectsPath, _.merge(config.build, opts)))
-                        .pipe(msg.flush.info('', 'Project <%= project %> is compiled', '-', config))
-                })
                     .pipe(compileIndex(opts.projectsPath, {configWrap: 'window.manifests = <%= contents %>'}))
                     .pipe(msg.flush.info('', 'Build for <%= env.NODE_ENV %> completed!', '-'))
                     .pipe(through.obj(function(file, enc, cb) {cb(null, file);}, function(callback) {
