@@ -177,7 +177,7 @@ For local and builded project uses different manifests.
         }],
         css: [
             '//fonts.googleapis.com/css?family=Open+Sans:300italic,300,700,600,400&subset=cyrillic-ext,latin-ext',
-            'compiled/main/vendor/bootstrap.css', //You can include vendor's styles to vendor module
+            'compiled/main/vendor/angularStrap.css', //You can include vendor's styles to vendor module or use it directly: 'vendor/bootstrap/dist/css/bootstrap.css'
             'compiled/main/style.css',
         ]
 }
@@ -283,6 +283,7 @@ Has structure like `modules`. You can compile custom bundles of vendors
         rev: false, //don't uglify module name
         templateCacheModule: 'angularStrap',
         root: 'vendor/angular-strap/src',
+        includeCss: false //it will create a separate file `angularStrap.css`
         annotate: {
             createMainModule: 'angularStrap',
             add: true,
@@ -301,6 +302,9 @@ Has structure like `modules`. You can compile custom bundles of vendors
         templates: [
             'tooltip/tooltip.tpl.html',
             'datepicker/datepicker.tpl.html'
+        ],
+        styles: [ //you can include third-party styles to module
+            '../../vendor/bootstrap/dist/css/bootstrap.less'
         ]
     }
 }   
