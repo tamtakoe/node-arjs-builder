@@ -131,7 +131,7 @@ Structure
 }
 ```
 
-####public####
+#### public ####
 
 Config for web. This will be export to `window.project.config`
 
@@ -143,11 +143,11 @@ Config for web. This will be export to `window.project.config`
 }
 ```
 
-####localhost####
+#### localhost ####
 
 Config development on local device.
 
-####webserver####
+#### webserver ####
 
 Config for local webserver. May be array of configs for several servers. See [node-webserver-lite documentation](https://github.com/tamtakoe/node-webserver-lite)
 
@@ -159,7 +159,7 @@ Config for local webserver. May be array of configs for several servers. See [no
 }
 ```
 
-####manifest####
+#### manifest ####
 
 List of resources which will be included to index.html as link or scripts tags.
 Paths for builded files add to manifest of builded projects.
@@ -181,7 +181,7 @@ You can see current project manifest (with extra fields) in `window.project`
 }
 ```
 
-####modules, vendor####
+#### modules, vendor ####
 
 `modules` and `vendor` is a map with modules configs. Configs from `modules` merge on corresponding modules with `<every module params>`
 
