@@ -186,7 +186,16 @@ For local and builded project uses different manifests.
 ```js
 //build manifest
 {
-    browsers: ["chrome >= 30", "ff >= 20", "safari >= 7", "ie >= 10", "opera >= 12.10", "android >= 4.4", "ios >= 7", "phantomjs >= 1.9"],
+    browsers: [ //you can override default versions of browsers
+        "chrome >= 30",
+        "ff >= 20",
+        "safari >= 7",
+        "ie >= 10",
+        "opera >= 12.10",
+        "android >= 4.4",
+        "ios >= 7",
+        "phantomjs >= 1.9"
+    ],
     resources: {
         html: [
             'main/common/directives/header/template.html', //You can cache some templates, wich will be showed until js-framework loaded
@@ -213,7 +222,7 @@ and values — destination paths or filenames relative to build directory.
 //default value of `copy`
 {
     'favicon.ico': 'favicon.ico', //copy file to build directory
-    'files/**': 'files/' //copy folder to build directory. (`files` is value from `filesDir` option)
+    'files/**': 'files/' //copy folder to build directory. (`files` is value of `filesDir` option)
 }
 ```
 
