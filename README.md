@@ -559,6 +559,13 @@ Default: `{}`
 
 [less config](http://lesscss.org/#using-less-configuration)
 
+##### annotate
+Type: `Object`
+
+Default: `{}`
+
+[angular annotate config](https://github.com/tamtakoe/gulp-ng-annotate-plus)
+
 ## License
 
 © Oleg Istomin 2015.
