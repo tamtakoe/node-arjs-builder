@@ -132,7 +132,7 @@ Structure
 }
 ```
 
-#### public ####
+#### public
 
 Config for web. It will be export to `window.project.config`
 
@@ -144,11 +144,11 @@ Config for web. It will be export to `window.project.config`
 }
 ```
 
-#### localhost ####
+#### localhost
 
 Config for development on local device.
 
-#### webserver ####
+#### webserver
 
 Config for local webserver. May be array of configs for several servers. See [node-webserver-lite documentation](https://github.com/tamtakoe/node-webserver-lite)
 
@@ -160,7 +160,7 @@ Config for local webserver. May be array of configs for several servers. See [no
 }
 ```
 
-#### manifest ####
+#### manifest
 
 List of resources which will be included to index.html as link or scripts tags.
 Paths for builded files add to manifest of builded projects.
@@ -209,11 +209,11 @@ For local and builded project uses different manifests.
 }
 ```
 
-#### build ####
+#### build
 
 Config for build project for final testing and production
 
-#### copy ####
+#### copy
 
 `copy` is a map where keys are [Glob](https://github.com/isaacs/node-glob)-pattern of source files relative to project directory,
 and values — destination paths or filenames relative to build directory.
@@ -234,7 +234,7 @@ You can add custom files for copying in your config:
 }
 ```
 
-#### modules ####
+#### modules
 
 `modules` is a map with modules configs. Configs from `modules` merge on corresponding modules with `<every module params>`
 
@@ -272,7 +272,7 @@ You can add custom files for copying in your config:
 }
 ```
 
-#### vendor ####
+#### vendor
 
 Has structure like `modules`. You can compile custom bundles of vendors
 
@@ -309,6 +309,255 @@ Has structure like `modules`. You can compile custom bundles of vendors
     }
 }   
 ```
+
+#### module params
+
+##### sortIndex
+Type: `Integer`
+
+Defines order of modules loading. Use for `build.modules` array
+
+##### baseUrl
+Type: `String`
+
+Default: `projectsPath` (`process.cwd() + '/projects'`)
+
+Base path for module files
+
+##### root
+Type: `String`
+
+Default: `''`
+
+Path for module files relatively `baseUrl`
+
+##### index
+Type: `String`
+
+Default: `false`
+
+Use local index.html. Can be `false`, `true`, `'external'`. If `true` or `'external'` index.html copy to builded project folder. 
+`'external'` is usually used for server redirects to project folder. Example for `admin` project
+
+**project config (local server)**
+
+```js
+localhost: {
+  webserver: {
+    root: 'build'
+    proxies: true
+    port: 7201
+  }
+}
+```
+
+**nginx**
+
+```js
+location /admin {
+  include /etc/nginx/conf.d/auth.conf;
+   try_files $uri @admin;
+}
+    
+location @admin {
+  rewrite .* /admin/index.html break;
+}
+```
+##### system
+Type: `String`
+
+Default: `'angularAmd'`
+
+Shorcuts for module wrapper. Can be:
+
+**amd**
+
+http: `define("<%= name %>", [], function(){ var cache = window.lib.Cache("resource"); <%= contents %> });`
+
+template: `define("<%= name %>", [], function(){ var cache = window.lib.Cache("resource"); <%= contents %> });`
+
+**angularAmd**
+
+http: `define("<%= name %>", ["app"], function(app){ app.run(["$cacheFactory", function($cacheFactory) {var cache = $cacheFactory.get("$http"); <%= contents %> }]); });`
+
+template: `define("<%= name %>", ["app"], function(app){ app.run(["$templateCache", function(cache) {<%= contents %> }]); });`
+
+**angular**
+
+http: `angular.module("<%= name %>").run(["$cacheFactory", function($cacheFactory) {var cache = $cacheFactory.get("$http"); <%= contents %> }]);`
+
+template: `angular.module("<%= name %>").run(["$templateCache", function(cache) {<%= contents %> }]);`
+
+or **custom wrappers object** (`<%= name %>` is http or template cache module)
+
+```js
+{
+  http: '<wrapper for http cache>'
+  template: '<wrapper for template cache>'
+}
+```
+
+See [gulp-resource-cache](https://github.com/tamtakoe/gulp-resource-cache) config
+
+##### templatePathPrefix
+Type: `String`
+
+Default: `''`
+
+Prefix for templates paths
+
+##### httpPathPrefix
+Type: `String`
+
+Default: `''`
+
+Prefix for http url paths
+
+##### templateCacheModule
+Type: `String`
+
+Name of module with template cache
+
+##### httpCacheModule
+Type: `String`
+
+Name of module with http cache
+
+##### wrapScript
+Type: `String`
+
+Wrapper for each module script. F.e.:
+
+```js
+vendor: {
+  xlsxAmd: {
+    rev: false,
+    root: 'vendor/js-xlsx/dist',
+    wrapScript: 'define(["JSZip"], function(JSZip) {<%= contents %> window.XLSX = XLSX; return XLSX;})',
+    scripts: ['xlsx.js']
+  }
+}
+```
+
+##### scripts
+Type: `[String]`
+
+Array with paths of projects scripts (js)
+
+##### templates
+Type: `[String]`
+
+Array with paths of projects templates
+
+##### styles
+Type: `[String]`
+
+Array with paths of projects styles
+
+##### templateName
+Type: `String`
+
+Default: `'template.html'`
+
+name of template related to the script (requireJs case)
+
+##### styleName
+Type: `[String]`
+
+Default: `['style.css', 'style.styl', 'style.less', 'style.scss', 'style.sass']`
+
+Array names of styles related to the script (requireJs case)
+
+##### filesDir
+Type: `String`
+
+Default: `files`
+
+Name of files folder
+
+##### rev
+Type: `Boolean`
+
+Default: `true`
+
+Uglify filename to md5 of content
+
+##### uglifyJs
+Type: `Boolean`/`Object`
+
+Default: `false`
+
+[UglifyJS](https://github.com/terinjokes/gulp-uglify) config
+
+##### minifyHtml
+Type: `Boolean`/`Object`
+
+Default: `true` (`{empty: true, spare: true, loose: true}`)
+
+[minifyHtml config](https://github.com/murphydanger/gulp-minify-html)
+
+##### minifyCss
+Type: `Boolean`/`Object`
+
+Default: `false`
+
+[minifyCss config](https://github.com/murphydanger/gulp-minify-css)
+
+##### autoprefixer
+Type: `Boolean`/`Object`
+
+Default: `false`
+
+[autoprefixer config](https://github.com/postcss/autoprefixer#options)
+
+##### includeCss
+Type: `Boolean`
+
+Default: `true`
+
+Include css to js
+
+##### includeCss
+Type: `Object`
+
+Default: `{}`
+
+Replace `@import` on the css content. See [cssimport config](https://github.com/unlight/gulp-cssimport)
+
+##### inlineImgToCss
+Type: `Boolean`/`Object`
+
+Default: `true` (`baseDir: <baseUrl>, maxImageSize: Infinity, exclude: [new RegExp('^[\"\']?((http|https|\/\/)|\/?' + <filesDir> +  ')')]`)
+
+Inline resources to css in base64. See [base64 config](https://github.com/Wenqer/gulp-base64)
+
+##### stylus
+Type: `Object`
+
+Default: `{'include-css': true}`
+
+[stylus config](https://github.com/stevelacy/gulp-stylus)
+
+##### sass
+Type: `Object`
+
+Default: `{}`
+
+[sass config](https://github.com/sass/node-sass#options)
+
+##### scss
+Type: `Object`
+
+Default: `{}`
+
+[scss config](https://github.com/sass/node-sass#options)
+
+##### less
+Type: `Object`
+
+Default: `{}`
+
+[less config](http://lesscss.org/#using-less-configuration)
 
 ## License
 
