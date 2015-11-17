@@ -339,7 +339,7 @@ Default: `false`
 Use local index.html. Can be `false`, `true`, `'external'`. If `true` or `'external'` index.html copy to builded project folder. 
 `'external'` is usually used for server redirects to project folder. Example for `admin` project
 
-**project config (local server)**
+*project config (local server)*
 
 ```js
 localhost: {
@@ -351,7 +351,7 @@ localhost: {
 }
 ```
 
-**nginx**
+*nginx*
 
 ```js
 location /admin {
@@ -370,25 +370,25 @@ Default: `'angularAmd'`
 
 Shorcuts for module wrapper. Can be:
 
-**amd**
+*amd*
 
 http: `define("<%= name %>", [], function(){ var cache = window.lib.Cache("resource"); <%= contents %> });`
 
 template: `define("<%= name %>", [], function(){ var cache = window.lib.Cache("resource"); <%= contents %> });`
 
-**angularAmd**
+*angularAmd*
 
 http: `define("<%= name %>", ["app"], function(app){ app.run(["$cacheFactory", function($cacheFactory) {var cache = $cacheFactory.get("$http"); <%= contents %> }]); });`
 
 template: `define("<%= name %>", ["app"], function(app){ app.run(["$templateCache", function(cache) {<%= contents %> }]); });`
 
-**angular**
+*angular*
 
 http: `angular.module("<%= name %>").run(["$cacheFactory", function($cacheFactory) {var cache = $cacheFactory.get("$http"); <%= contents %> }]);`
 
 template: `angular.module("<%= name %>").run(["$templateCache", function(cache) {<%= contents %> }]);`
 
-or **custom wrappers object** (`<%= name %>` is http or template cache module)
+or *custom wrappers object* (`<%= name %>` is http or template cache module)
 
 ```js
 {
