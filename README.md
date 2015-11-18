@@ -50,55 +50,33 @@ Return instance of builder
   Default: `process.cwd() + '/projects'`  
   Root folder for projects etc.
 
-##### configsDir
-Type: `String`
+- **configsDir** (`String`)  
+  Default: `'*/_config'`  
+  [Glob](https://github.com/isaacs/node-glob)-pattern for project config folders.
 
-Default: `'*/_config'`
+- **compiledDir** (`String`)  
+  Default: `'compiled'`  
+  Folder for compiled files for local work (styles, compiled vendors)
 
-[Glob](https://github.com/isaacs/node-glob)-pattern for project config folders.
+- **buildDir** (`String`)  
+  Default: `'build'`  
+  Folder for builded files
 
-##### compiledDir
-Type: `String`
+- **filesDir** (`String`)  
+  Default: `'files'`  
+  Assets (big images, fonts, video) which don't include into css-files. Better to store on a separate file server
 
-Default: `'compiled'`
+- **vendorDir** (`String`)  
+  Default: `'vendor'`  
+  Vendor libraries (f.e. from bower)
 
-Folder for compiled files for local work (styles, compiled vendors)
+- **maxListeners** (`Integer`)  
+  Default: `100`  
+  Set `EventEmitter._maxListeners`. Increase this value if there are EventEmitter errors of build of big project
 
-##### buildDir
-Type: `String`
-
-Default: `'build'`
-
-Folder for builded files
-
-##### filesDir
-Type: `String`
-
-Default: `'files'`
-
-Assets (big images, fonts, video) which don't include into css-files. Better to store on a separate file server
-
-##### vendorDir
-Type: `String`
-
-Default: `'vendor'`
-
-Vendor libraries (f.e. from bower)
-
-##### maxListeners
-Type: `Number`
-
-Default: `100`
-
-Set `EventEmitter._maxListeners`. Increase this value if there are EventEmitter errors of build of big project
-
-##### browsers
-Type: `Array`
-
-Default: `['chrome >= 35', 'ff >= 20', 'safari >= 7', 'ie >= 10', 'opera >= 12.10', 'android >= 4.4', 'ios >= 7', 'phantomjs >= 1.9']`
-
-Defines supporting browsers. It use for old browsers checking and [Autoprefixer](https://github.com/postcss/autoprefixer)
-
+- **browsers** (`Array` of `Strings`)  
+  Default: `['chrome >= 35', 'ff >= 20', 'safari >= 7', 'ie >= 10', 'opera >= 12.10', 'android >= 4.4', 'ios >= 7', 'phantomjs >= 1.9']`  
+  Defines supporting browsers. It use for old browsers checking and [Autoprefixer](https://github.com/postcss/autoprefixer)
 
 ## Config API
 
