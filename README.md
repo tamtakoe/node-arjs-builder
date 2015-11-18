@@ -454,6 +454,11 @@ Type: `[String]`
 
 Array with paths of projects styles
 
+##### httpCache
+Type: `[String]`
+
+Array with urls which will be requested and cached to framework cache. It useful for small resources like languages or city lists
+
 ##### templateName
 Type: `String`
 
