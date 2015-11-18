@@ -39,18 +39,17 @@ Return instance of builder
 #### params
 
 ##### localConfigsPath
-Type: `String`
-
-Default: `process.cwd() + '/configs'`
-
+<dl><dd>
+Type: `String`<br/>
+Default: `process.cwd() + '/configs'`<br/>
 Folder for local configs.
+</dd></dl>
 
 ##### karmaConfigPath
-Type: `String`
-
-Default: `process.cwd() + '/karma.conf.js'`
-
-Path to Karma config
+> Type: `String`<br/>
+> Default: `process.cwd() + '/karma.conf.js'`<br/>
+>
+> Path to Karma config
 
 ##### projectsPath
 Type: `String`
