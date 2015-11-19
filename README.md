@@ -337,7 +337,7 @@ Has structure like `modules`. You can compile custom bundles of vendors
   **`http:`** `angular.module("<%= name %>").run(["$cacheFactory", function($cacheFactory) {var cache = $cacheFactory.get("$http"); <%= contents %> }]);`  
   **`template:`** `angular.module("<%= name %>").run(["$templateCache", function(cache) {<%= contents %> }]);`
 
-  or *custom wrappers object* (`<%= name %>` is name of http or template cache module)  
+  or **custom wrappers object** (`<%= name %>` is name of http or template cache module)  
   ```js
   {
     http: '<wrapper for http cache>'
