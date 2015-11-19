@@ -288,87 +288,68 @@ Has structure like `modules`. You can compile custom bundles of vendors
   Default: `projectsPath` (`process.cwd() + '/projects'`)  
   Base path for module files
 
-##### root
-Type: `String`
+- **root** (`String`)  
+  Default: `''`  
+  Path for module files relatively `baseUrl`
 
-Default: `''`
+- **index** (`String`)  
+  Default: `false`  
+  Use local index.html. Can be `false`, `true`, `'external'`. If `true` or `'external'` index.html copy to builded project folder.
 
-Path for module files relatively `baseUrl`
+  `'external'` is usually used for server redirects to project folder. Example for `admin` project
 
-##### index
-Type: `String`
-
-Default: `false`
-
-Use local index.html. Can be `false`, `true`, `'external'`. If `true` or `'external'` index.html copy to builded project folder. 
-`'external'` is usually used for server redirects to project folder. Example for `admin` project
-
-*project config (local server)*
-
-```js
-localhost: {
-  webserver: {
-    root: 'build'
-    proxies: true
-    port: 7201
+  *project config (local server)*  
+  ```js
+  localhost: {
+    webserver: {
+      root: 'build'
+      proxies: true
+      port: 7201
+    }
   }
-}
-```
+  ```
 
-*nginx*
-
-```js
-location /admin {
-  include /etc/nginx/conf.d/auth.conf;
-   try_files $uri @admin;
-}
+  *nginx*  
+  ```js
+  location /admin {
+    include /etc/nginx/conf.d/auth.conf;
+     try_files $uri @admin;
+  }
     
-location @admin {
-  rewrite .* /admin/index.html break;
-}
-```
-##### system
-Type: `String`
+  location @admin {
+    rewrite .* /admin/index.html break;
+  }
+  ```
+  
+- **system** (`String`)  
+  Default: `'angularAmd'`  
+  Shorcuts for module wrapper. Can be:
 
-Default: `'angularAmd'`
+  *amd*  
+  http: `define("<%= name %>", [], function(){ var cache = window.lib.Cache("resource"); <%= contents %> });`  
+  template: `define("<%= name %>", [], function(){ var cache = window.lib.Cache("resource"); <%= contents %> });`
+  
+  *angularAmd*  
+  http: `define("<%= name %>", ["app"], function(app){ app.run(["$cacheFactory", function($cacheFactory) {var cache = $cacheFactory.get("$http"); <%= contents %> }]); });`  
+  template: `define("<%= name %>", ["app"], function(app){ app.run(["$templateCache", function(cache) {<%= contents %> }]); });`
 
-Shorcuts for module wrapper. Can be:
+  *angular*
+  http: `angular.module("<%= name %>").run(["$cacheFactory", function($cacheFactory) {var cache = $cacheFactory.get("$http"); <%= contents %> }]);`  
+  template: `angular.module("<%= name %>").run(["$templateCache", function(cache) {<%= contents %> }]);`
 
-*amd*
+  or *custom wrappers object* (`<%= name %>` is name of http or template cache module)  
+  ```js
+  {
+    http: '<wrapper for http cache>'
+    template: '<wrapper for template cache>'
+  }
+  ```
 
-http: `define("<%= name %>", [], function(){ var cache = window.lib.Cache("resource"); <%= contents %> });`
+  See [gulp-resource-cache](https://github.com/tamtakoe/gulp-resource-cache) config
 
-template: `define("<%= name %>", [], function(){ var cache = window.lib.Cache("resource"); <%= contents %> });`
-
-*angularAmd*
-
-http: `define("<%= name %>", ["app"], function(app){ app.run(["$cacheFactory", function($cacheFactory) {var cache = $cacheFactory.get("$http"); <%= contents %> }]); });`
-
-template: `define("<%= name %>", ["app"], function(app){ app.run(["$templateCache", function(cache) {<%= contents %> }]); });`
-
-*angular*
-
-http: `angular.module("<%= name %>").run(["$cacheFactory", function($cacheFactory) {var cache = $cacheFactory.get("$http"); <%= contents %> }]);`
-
-template: `angular.module("<%= name %>").run(["$templateCache", function(cache) {<%= contents %> }]);`
-
-or *custom wrappers object* (`<%= name %>` is http or template cache module)
-
-```js
-{
-  http: '<wrapper for http cache>'
-  template: '<wrapper for template cache>'
-}
-```
-
-See [gulp-resource-cache](https://github.com/tamtakoe/gulp-resource-cache) config
-
-##### templatePathPrefix
-Type: `String`
-
-Default: `''`
-
-Prefix for templates paths
+- **templatePathPrefix** (`String`)  
+  Default: `''`  
+  Prefix for templates paths
 
 ##### httpPathPrefix
 Type: `String`
