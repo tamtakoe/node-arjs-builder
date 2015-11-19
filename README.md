@@ -325,17 +325,17 @@ Has structure like `modules`. You can compile custom bundles of vendors
   Default: `'angularAmd'`  
   Shorcuts for module wrapper. Can be:
 
-  **`amd`**  
-  **http:** `define("<%= name %>", [], function(){ var cache = window.lib.Cache("resource"); <%= contents %> });`  
-  **template:** `define("<%= name %>", [], function(){ var cache = window.lib.Cache("resource"); <%= contents %> });`
+  **amd**  
+  **`http:`** `define("<%= name %>", [], function(){ var cache = window.lib.Cache("resource"); <%= contents %> });`  
+  **`template:`** `define("<%= name %>", [], function(){ var cache = window.lib.Cache("resource"); <%= contents %> });`
   
-  **`angularAmd`**  
-  **http:** `define("<%= name %>", ["app"], function(app){ app.run(["$cacheFactory", function($cacheFactory) {var cache = $cacheFactory.get("$http"); <%= contents %> }]); });`  
-  **template:** `define("<%= name %>", ["app"], function(app){ app.run(["$templateCache", function(cache) {<%= contents %> }]); });`
+  **angularAmd**  
+  **`http:`** `define("<%= name %>", ["app"], function(app){ app.run(["$cacheFactory", function($cacheFactory) {var cache = $cacheFactory.get("$http"); <%= contents %> }]); });`  
+  **`template:`** `define("<%= name %>", ["app"], function(app){ app.run(["$templateCache", function(cache) {<%= contents %> }]); });`
 
-  **`angular`**  
-  **http:** `angular.module("<%= name %>").run(["$cacheFactory", function($cacheFactory) {var cache = $cacheFactory.get("$http"); <%= contents %> }]);`  
-  **template:** `angular.module("<%= name %>").run(["$templateCache", function(cache) {<%= contents %> }]);`
+  **angular**  
+  **`http:`** `angular.module("<%= name %>").run(["$cacheFactory", function($cacheFactory) {var cache = $cacheFactory.get("$http"); <%= contents %> }]);`  
+  **`template:`** `angular.module("<%= name %>").run(["$templateCache", function(cache) {<%= contents %> }]);`
 
   or *custom wrappers object* (`<%= name %>` is name of http or template cache module)  
   ```js
