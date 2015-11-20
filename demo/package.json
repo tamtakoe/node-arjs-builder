@@ -1,0 +1,9 @@
+{
+    "name": "arjs-builder-demo",
+    "version": "0.0.0",
+    "private": true,
+    "devDependencies": {
+        "gulp": "^3.9.0",
+        "arjs-builder": "^0.0.11"
+    }
+}

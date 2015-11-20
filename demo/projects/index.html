@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Demo</title>
+
+    <meta charset="utf-8">
+    <meta name="fragment" content="!">
+
+    <base href="/">
+
+    <script src="compiled/manifests.js" config></script>
+    <script src="lib.js" inline></script>
+    <link href="lib.css" rel="stylesheet" inline>
+</head>
+<body class="rendering">
+    <div id="flashMessage" class="app-flashMessage ng-hide" app-flash-message></div>
+
+    <div id="deploymentLabel" class="app-deployment ng-hide hidden-print" app-deployment-label></div>
+
+    <div id="body" class="app-body" autoscroll="false" ng-include="'/main/common/body/template.html'"></div>
+
+    <app-body-preloader id="bodyPreloader" class="app-body-preloader" ng-show="$loading"></app-body-preloader>
+</body>
+</html>

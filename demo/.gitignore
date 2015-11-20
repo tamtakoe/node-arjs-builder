@@ -1,0 +1,13 @@
+node_modules
+configs
+projects/vendor
+projects/build
+projects/compiled
+_
+
+logs
+*.log
+
+.lock-wscript
+/.idea/
+*.editorconfig

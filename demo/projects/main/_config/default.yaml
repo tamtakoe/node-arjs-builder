@@ -1,0 +1,35 @@
+public:
+  name: 'Demo'
+
+localhost:
+  webserver:
+    - port: 7000
+      livereload: true
+    - port: 7100
+    - root: 'build'
+      port: 7200
+      livereload: true
+
+  manifest:
+    resources:
+      js:
+        - 'src': 'vendor/requirejs/require.js'
+          'data-main': 'main/requireconfig'
+      css:
+        - 'compiled/main/style.css'
+
+build:
+  autoprefixer: true
+  inlineImgToCss: true
+
+  modules:
+    vendor:
+      includeCss: false
+      scripts:
+        - 'vendor/requirejs/require.js'
+
+      uglifyJs:
+        mangle: false
+    common:
+      sortIndex: 1
+      includeCss: false

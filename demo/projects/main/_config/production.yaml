@@ -1,0 +1,15 @@
+public:
+  env: 'Production'
+
+build:
+  uglifyJs: true
+  minifyHtml: true
+  minifyCss: true
+  inlineImgToCss: true
+
+  modules:
+    vendor:
+      minifyHtml: true
+      minifyCss: true
+      uglifyJs:
+        mangle: false
