@@ -31,6 +31,8 @@ gulp.task('test', arjs.test);
 gulp.task('default', arjs.run); //compile and run local servers
 ```
 
+See [demo project](https://github.com/tamtakoe/node-arjs-builder/tree/master/demo) and [big demo project](https://github.com/tamtakoe/node-arjs-builder-seed)
+
 ## API
 ### arjsBuilder([params])
 
