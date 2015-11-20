@@ -232,8 +232,6 @@ function createBuilder(options) {
                         .pipe(msg.flush.info('', 'Vendor for <%= project %> is created', '-', config));
                 });
 
-
-
                 return totalStream
                     .pipe(msg.flush.info('', 'Vendors created!', '-'))
                     .pipe(through.obj(function(file, enc, cb) {cb(null, file);}, function(callback) {
@@ -353,7 +351,19 @@ function createBuilder(options) {
     }
 
     function compile() {
-        return series(config(), compileVendor(), compileStyles());
+        var stream = through.obj();
+
+        series(compileVendor())
+            .on('end', function() {
+                return compileStyles()
+                    .pipe(through.obj(function(file, enc, cb) {cb(null, file);}, function(callback) {
+                        callback();
+                        stream.end();
+                    }));
+            });
+
+        return stream;
+        //return series(compileVendor(), compileStyles()); //TODO compileVendor must to return correct stream
     }
 
     function run() {
