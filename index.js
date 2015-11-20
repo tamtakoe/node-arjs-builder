@@ -231,13 +231,16 @@ function createBuilder(options) {
                         .pipe(gulp.dest(path.join(opts.compiledPath, projectName, opts.vendorDir)))
                         .pipe(msg.flush.info('', 'Vendor for <%= project %> is created', '-', config));
                 });
-
-                return totalStream
-                    .pipe(msg.flush.info('', 'Vendors created!', '-'))
-                    .pipe(through.obj(function(file, enc, cb) {cb(null, file);}, function(callback) {
-                        callback();
-                        stream.end();
-                    }));
+                if (totalStream) {
+                    return totalStream
+                        .pipe(msg.flush.info('', 'Vendors created!', '-'))
+                        .pipe(through.obj(function(file, enc, cb) {cb(null, file);}, function(callback) {
+                            callback();
+                            stream.end();
+                        }));
+                } else {
+                    return stream.end();
+                }
             });
 
         return stream;
