@@ -38,76 +38,45 @@ Return instance of builder
 
 #### params
 
-##### localConfigsPath
-Type: `String`
+- **localConfigsPath** (`String`)  
+  Default: `process.cwd() + '/configs'`  
+  Folder for local configs.
 
-Default: `process.cwd() + '/configs'`
+- **karmaConfigPath** (`String`)  
+  Default: `process.cwd() + '/karma.conf.js'`
+  Path to Karma config
 
-Folder for local configs.
+- **projectsPath** (`String`)  
+  Default: `process.cwd() + '/projects'`  
+  Root folder for projects etc.
 
-##### karmaConfigPath
-Type: `String`
+- **configsDir** (`String`)  
+  Default: `'*/_config'`  
+  [Glob](https://github.com/isaacs/node-glob)-pattern for project config folders.
 
-Default: `process.cwd() + '/karma.conf.js'`
+- **compiledDir** (`String`)  
+  Default: `'compiled'`  
+  Folder for compiled files for local work (styles, compiled vendors)
 
-Path to Karma config
+- **buildDir** (`String`)  
+  Default: `'build'`  
+  Folder for builded files
 
-##### projectsPath
-Type: `String`
+- **filesDir** (`String`)  
+  Default: `'files'`  
+  Assets (big images, fonts, video) which don't include into css-files. Better to store on a separate file server
 
-Default: `process.cwd() + '/projects'`
+- **vendorDir** (`String`)  
+  Default: `'vendor'`  
+  Vendor libraries (f.e. from bower)
 
-Root folder for projects etc.
+- **maxListeners** (`Integer`)  
+  Default: `100`  
+  Set `EventEmitter._maxListeners`. Increase this value if there are EventEmitter errors of build of big project
 
-##### configsDir
-Type: `String`
-
-Default: `'*/_config'`
-
-[Glob](https://github.com/isaacs/node-glob)-pattern for project config folders.
-
-##### compiledDir
-Type: `String`
-
-Default: `'compiled'`
-
-Folder for compiled files for local work (styles, compiled vendors)
-
-##### buildDir
-Type: `String`
-
-Default: `'build'`
-
-Folder for builded files
-
-##### filesDir
-Type: `String`
-
-Default: `'files'`
-
-Assets (big images, fonts, video) which don't include into css-files. Better to store on a separate file server
-
-##### vendorDir
-Type: `String`
-
-Default: `'vendor'`
-
-Vendor libraries (f.e. from bower)
-
-##### maxListeners
-Type: `Number`
-
-Default: `100`
-
-Set `EventEmitter._maxListeners`. Increase this value if there are EventEmitter errors of build of big project
-
-##### browsers
-Type: `Array`
-
-Default: `['chrome >= 35', 'ff >= 20', 'safari >= 7', 'ie >= 10', 'opera >= 12.10', 'android >= 4.4', 'ios >= 7', 'phantomjs >= 1.9']`
-
-Defines supporting browsers. It use for old browsers checking and [Autoprefixer](https://github.com/postcss/autoprefixer)
-
+- **browsers** (`Array` of `String`)  
+  Default: `['chrome >= 35', 'ff >= 20', 'safari >= 7', 'ie >= 10', 'opera >= 12.10', 'android >= 4.4', 'ios >= 7', 'phantomjs >= 1.9']`  
+  Defines supporting browsers. It use for old browsers checking and [Autoprefixer](https://github.com/postcss/autoprefixer)
 
 ## Config API
 
@@ -312,259 +281,175 @@ Has structure like `modules`. You can compile custom bundles of vendors
 
 #### module params
 
-##### sortIndex
-Type: `Integer`
+- **sortIndex** (`Integer`)  
+  Defines order of modules loading. Use for `build.modules` array
 
-Defines order of modules loading. Use for `build.modules` array
+- **baseUrl** (`String`)  
+  Default: `projectsPath` (`process.cwd() + '/projects'`)  
+  Base path for module files
 
-##### baseUrl
-Type: `String`
+- **root** (`String`)  
+  Default: `''`  
+  Path for module files relatively `baseUrl`
 
-Default: `projectsPath` (`process.cwd() + '/projects'`)
+- **index** (`String`)  
+  Default: `false`  
+  Use local index.html. Can be `false`, `true`, `'external'`. If `true` or `'external'` index.html copy to builded project folder.
 
-Base path for module files
+  `'external'` is usually used for server redirects to project folder. Example for `admin` project:
 
-##### root
-Type: `String`
-
-Default: `''`
-
-Path for module files relatively `baseUrl`
-
-##### index
-Type: `String`
-
-Default: `false`
-
-Use local index.html. Can be `false`, `true`, `'external'`. If `true` or `'external'` index.html copy to builded project folder. 
-`'external'` is usually used for server redirects to project folder. Example for `admin` project
-
-*project config (local server)*
-
-```js
-localhost: {
-  webserver: {
-    root: 'build'
-    proxies: true
-    port: 7201
+  *localhost config*  
+  ```js
+  localhost: {
+    webserver: {
+      root: 'build'
+      proxies: true
+      port: 7201
+    }
   }
-}
-```
+  ```
 
-*nginx*
-
-```js
-location /admin {
-  include /etc/nginx/conf.d/auth.conf;
-   try_files $uri @admin;
-}
+  *nginx*  
+  ```js
+  location /admin {
+    include /etc/nginx/conf.d/auth.conf;
+     try_files $uri @admin;
+  }
     
-location @admin {
-  rewrite .* /admin/index.html break;
-}
-```
-##### system
-Type: `String`
-
-Default: `'angularAmd'`
-
-Shorcuts for module wrapper. Can be:
-
-*amd*
-
-http: `define("<%= name %>", [], function(){ var cache = window.lib.Cache("resource"); <%= contents %> });`
-
-template: `define("<%= name %>", [], function(){ var cache = window.lib.Cache("resource"); <%= contents %> });`
-
-*angularAmd*
-
-http: `define("<%= name %>", ["app"], function(app){ app.run(["$cacheFactory", function($cacheFactory) {var cache = $cacheFactory.get("$http"); <%= contents %> }]); });`
-
-template: `define("<%= name %>", ["app"], function(app){ app.run(["$templateCache", function(cache) {<%= contents %> }]); });`
-
-*angular*
-
-http: `angular.module("<%= name %>").run(["$cacheFactory", function($cacheFactory) {var cache = $cacheFactory.get("$http"); <%= contents %> }]);`
-
-template: `angular.module("<%= name %>").run(["$templateCache", function(cache) {<%= contents %> }]);`
-
-or *custom wrappers object* (`<%= name %>` is http or template cache module)
-
-```js
-{
-  http: '<wrapper for http cache>'
-  template: '<wrapper for template cache>'
-}
-```
-
-See [gulp-resource-cache](https://github.com/tamtakoe/gulp-resource-cache) config
-
-##### templatePathPrefix
-Type: `String`
-
-Default: `''`
-
-Prefix for templates paths
-
-##### httpPathPrefix
-Type: `String`
-
-Default: `''`
-
-Prefix for http url paths
-
-##### templateCacheModule
-Type: `String`
-
-Name of module with template cache
-
-##### httpCacheModule
-Type: `String`
-
-Name of module with http cache
-
-##### wrapScript
-Type: `String`
-
-Wrapper for each module script. F.e.:
-
-```js
-vendor: {
-  xlsxAmd: {
-    rev: false,
-    root: 'vendor/js-xlsx/dist',
-    wrapScript: 'define(["JSZip"], function(JSZip) {<%= contents %> window.XLSX = XLSX; return XLSX;})',
-    scripts: ['xlsx.js']
+  location @admin {
+    rewrite .* /admin/index.html break;
   }
-}
-```
+  ```
+  
+- **system** (`String`)  
+  Default: `'angularAmd'`  
+  Shorcuts for module wrapper. Can be:
 
-##### scripts
-Type: `[String]`
+  **amd**  
+  **`http:`** `define("<%= name %>", [], function(){ var cache = window.lib.Cache("resource"); <%= contents %> });`  
+  **`template:`** `define("<%= name %>", [], function(){ var cache = window.lib.Cache("resource"); <%= contents %> });`
+  
+  **angularAmd**  
+  **`http:`** `define("<%= name %>", ["app"], function(app){ app.run(["$cacheFactory", function($cacheFactory) {var cache = $cacheFactory.get("$http"); <%= contents %> }]); });`  
+  **`template:`** `define("<%= name %>", ["app"], function(app){ app.run(["$templateCache", function(cache) {<%= contents %> }]); });`
 
-Array with paths of projects scripts (js)
+  **angular**  
+  **`http:`** `angular.module("<%= name %>").run(["$cacheFactory", function($cacheFactory) {var cache = $cacheFactory.get("$http"); <%= contents %> }]);`  
+  **`template:`** `angular.module("<%= name %>").run(["$templateCache", function(cache) {<%= contents %> }]);`
 
-##### templates
-Type: `[String]`
+  or **custom wrappers object** (`<%= name %>` is name of http or template cache module)  
+  ```js
+  {
+    http: '<wrapper for http cache>'
+    template: '<wrapper for template cache>'
+  }
+  ```
 
-Array with paths of projects templates
+  See [gulp-resource-cache](https://github.com/tamtakoe/gulp-resource-cache) config
 
-##### styles
-Type: `[String]`
+- **templatePathPrefix** (`String`)  
+  Default: `''`  
+  Prefix for templates paths
 
-Array with paths of projects styles
+- **httpPathPrefix** (`String`)  
+  Default: `''`  
+  Prefix for http url paths
 
-##### templateName
-Type: `String`
+- **templateCacheModule** (`String`)  
+  Name of module with template cache
 
-Default: `'template.html'`
+- **httpCacheModule** (`String`)  
+  Name of module with http cache
 
-name of template related to the script (requireJs case)
+- **wrapScript** (`String`)  
+  Wrapper for each module script. F.e.:  
+  ```js
+  vendor: {
+    xlsxAmd: {
+      rev: false,
+      root: 'vendor/js-xlsx/dist',
+      wrapScript: 'define(["JSZip"], function(JSZip) {<%= contents %> window.XLSX = XLSX; return XLSX;})',
+      scripts: ['xlsx.js']
+    }
+  }
+  ```
 
-##### styleName
-Type: `[String]`
+- **scripts** (`Array` of `String`)  
+  Array with paths of projects scripts (js)
 
-Default: `['style.css', 'style.styl', 'style.less', 'style.scss', 'style.sass']`
+- **templates** (`Array` of `String`)  
+  Array with paths of projects templates
 
-Array names of styles related to the script (requireJs case)
+- **styles** (`Array` of `String`)  
+  Array with paths of projects styles
 
-##### filesDir
-Type: `String`
+- **httpCache** (`String`)  
+  Array with urls which will be requested and cached to framework cache. It useful for small resources like languages or city lists
 
-Default: `files`
+- **templateName** (`String`)  
+  Default: `'template.html'`  
+  Name of template related to the script
 
-Name of files folder
+- **styleName** (`Array` of `String`)  
+  Default: `['style.css', 'style.styl', 'style.less', 'style.scss', 'style.sass']`  
+  Array names of styles related to the script
 
-##### rev
-Type: `Boolean`
+- **filesDir** (`String`)  
+  Default: `'files'`  
+  Name of files folder
 
-Default: `true`
+- **rev** (`Boolean`)  
+  Default: `true`  
+  Uglify filename to md5 of content
 
-Uglify filename to md5 of content
+- **uglifyJs** (`Boolean`/`Object`)  
+  Default: `false`  
+  [UglifyJS](https://github.com/terinjokes/gulp-uglify) config
 
-##### uglifyJs
-Type: `Boolean`/`Object`
+- **minifyHtml** (`Boolean`/`Object`)  
+  Default: `true` (`{empty: true, spare: true, loose: true}`)  
+  [minifyHtml config](https://github.com/murphydanger/gulp-minify-html)
 
-Default: `false`
+- **minifyCss** (`Boolean`/`Object`)  
+  Default: `false`  
+  [minifyCss config](https://github.com/murphydanger/gulp-minify-css)
 
-[UglifyJS](https://github.com/terinjokes/gulp-uglify) config
+- **autoprefixer** (`Boolean`/`Object`)  
+  Default: `false`  
+  [autoprefixer config](https://github.com/postcss/autoprefixer#options)
 
-##### minifyHtml
-Type: `Boolean`/`Object`
+- **includeCss** (`Boolean`)  
+  Default: `true`  
+  Include CSS to JS
 
-Default: `true` (`{empty: true, spare: true, loose: true}`)
+- **cssImport** (`Object`)  
+  Default: `{}`  
+  Replace `@import` on the css content. See [cssimport config](https://github.com/unlight/gulp-cssimport)
 
-[minifyHtml config](https://github.com/murphydanger/gulp-minify-html)
+- **inlineImgToCss** (`Boolean`/`Object`)  
+  Default: `true` (`baseDir: <baseUrl>, maxImageSize: Infinity, exclude: [new RegExp('^[\"\']?((http|https|\/\/)|\/?' + <filesDir> +  ')')]`)  
+  Inline resources to css in base64. See [base64 config](https://github.com/Wenqer/gulp-base64)
 
-##### minifyCss
-Type: `Boolean`/`Object`
+- **stylus** (`Object`)  
+  Default: `{'include-css': true}`  
+  [stylus config](https://github.com/stevelacy/gulp-stylus)
 
-Default: `false`
+- **sass** (`Object`)  
+  Default: `{}`  
+  [sass config](https://github.com/sass/node-sass#options)
 
-[minifyCss config](https://github.com/murphydanger/gulp-minify-css)
+- **scss** (`Object`)  
+  Default: `{}`  
+  [scss config](https://github.com/sass/node-sass#options)
 
-##### autoprefixer
-Type: `Boolean`/`Object`
+- **less** (`Object`)  
+  Default: `{}`  
+  [less config](http://lesscss.org/#using-less-configuration)
 
-Default: `false`
+- **annotate** (`Object`)  
+  Default: `{}`  
+  [angular annotate config](https://github.com/tamtakoe/gulp-ng-annotate-plus)
 
-[autoprefixer config](https://github.com/postcss/autoprefixer#options)
-
-##### includeCss
-Type: `Boolean`
-
-Default: `true`
-
-Include css to js
-
-##### includeCss
-Type: `Object`
-
-Default: `{}`
-
-Replace `@import` on the css content. See [cssimport config](https://github.com/unlight/gulp-cssimport)
-
-##### inlineImgToCss
-Type: `Boolean`/`Object`
-
-Default: `true` (`baseDir: <baseUrl>, maxImageSize: Infinity, exclude: [new RegExp('^[\"\']?((http|https|\/\/)|\/?' + <filesDir> +  ')')]`)
-
-Inline resources to css in base64. See [base64 config](https://github.com/Wenqer/gulp-base64)
-
-##### stylus
-Type: `Object`
-
-Default: `{'include-css': true}`
-
-[stylus config](https://github.com/stevelacy/gulp-stylus)
-
-##### sass
-Type: `Object`
-
-Default: `{}`
-
-[sass config](https://github.com/sass/node-sass#options)
-
-##### scss
-Type: `Object`
-
-Default: `{}`
-
-[scss config](https://github.com/sass/node-sass#options)
-
-##### less
-Type: `Object`
-
-Default: `{}`
-
-[less config](http://lesscss.org/#using-less-configuration)
-
-##### annotate
-Type: `Object`
-
-Default: `{}`
-
-[angular annotate config](https://github.com/tamtakoe/gulp-ng-annotate-plus)
 
 ## License
 
