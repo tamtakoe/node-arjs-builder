@@ -114,7 +114,7 @@ bootstrap.js
 requireconfig.js 
 ```
 
-> TODO: Make the structure more componential for a smooth transition to the Angular 2 and Web Components
+> TODO: Make the structure more componential for a easy transition to the Angular 2 and Web Components
 
 Let's go from the end. 
  
