@@ -114,6 +114,8 @@ bootstrap.js
 requireconfig.js 
 ```
 
+> TODO: Make the structure more componential for a smooth transition to the Angular 2 and Web Components
+
 Let's go from the end. 
  
 `requireconfig.js` — require the library files to the project
@@ -157,6 +159,8 @@ Configuration file structure:
     vendor: { ... }, //settings for the build vendors. For example, you can collect bootstrap or angularStrap with its own set of components
 } 
 ```
+
+> TODO: Make the config more simplier
 
 The config is probably the most difficult that is in the builder.
 It is better to look demo applications:
