@@ -1,6 +1,6 @@
 # node-arjs-builder [![NPM version](https://badge.fury.io/js/arjs-builder.svg)](http://badge.fury.io/js/arjs-builder)
-
-> Builder for Angular + RequireJS projects
+Builder for Angular + RequireJS projects
+[Intro](docs/intro.md)
 
 ## Install with [npm](npmjs.org)
 

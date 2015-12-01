@@ -1,3 +1,5 @@
+##Intro
+
 In recent years, the systems of build of web projects greatly evolved. Starting from the console utilities, Grunt, Gulp and ending WebPack.
 The main problem of existing builders is excessive flexibility. Many people believe this is a advantage, but I see a problem.
 The flexibility forces developers to read a lot of documentation (WebPack documentation is comparable by volume with JavaScript documentation), but also allows them to implement bad decisions.
@@ -6,22 +8,37 @@ An ideal builder cannot be created in isolation from the architecture of the pro
 
 ##Philosophy
 
-1. The programmer must make a minimum number of steps to set up, develop and build the project. Ideally, He should only write the business logic. All settings are declarative. The best code generator — copy-paste. 90% of programmers are not a guru. 
-2. Do not create unnecessary problems. Do not use the new technologies only because they are new. Use technologies that are supported by the main browser (Chrome) in the development. Minimize the quantity of processes that are in the watch. 
-3. The builder is designed for large and medium-sized projects working in production. The result of the build should provide the fastest loading site. 
+1. The programmer must make a minimum number of steps to set up, develop and build the project.
+   Ideally, He should only write the business logic. All settings are declarative.
+   The best code generator — copy-paste. 90% of programmers are not a guru.
+2. Do not create unnecessary problems. Do not use the new technologies only because they are new.
+   Use technologies that are supported by the main browser (Chrome) in the development.
+   Minimize the quantity of processes that are in the watch.
+3. The builder is designed for large and medium-sized projects working in production.
+   The result of the build should provide the fastest loading site.
  
 
 ##The build for the production
  
-To determine the optimal view of the built project, you need to analyze the structure of several large projects. We will see that more than a half of the code includes library modules (Angular, jQuery, React, Bootstrap, etc.) that must be loaded before the application get started. Before it was fashionable to connect every library in a separate script tag or take it from CDN, so it likely would be in the user's cache. Now many libraries are modular and developers use their own build of these libraries, so the easiest way is to combine all the libraries and plugins in a single file. It will be the biggest and the most rarely changing file in the project and it will not take just one stream of the browser. 
-The second important file/files is common, which describes the General logic and common styles of the entire project. It is not possible to run the project without it and it changes rather rarely. 
+To determine the optimal structure of the built project, you need to analyze the structure of several large projects.
+We will see that more than a half of the code includes library modules (Angular, jQuery, React, Bootstrap, etc.) that must be loaded before the application get started.
+Before it was fashionable to connect every library in a separate script tag or take it from CDN, so it likely would be in the user's cache.
+Now many libraries are modular and developers use their own build of these libraries, so the easiest way is to combine all the libraries and plugins in a single file.
+It will be the biggest and the most rarely changing file in the project and it will hold just one browser stream.
+
+The second important file/files is `common`, which describes the general logic and common styles of the entire project.
+It is not possible to run the project without it and it changes rather rarely.
  
-Further, there are 10-20 modules for sections and different business logic. They often change, but weigh little (if the module is heavy, it means that there are pictures that should be put in the file server). 
+Further, there are 10-20 modules for pages and different business logic.
+They often change, but weigh little (if the module is heavy, it means that the module contains inline pictures that should be in the file server).
+
 Let's see how will pass the first loading of an average project (gzip enabled):
 
 ![network](https://raw.githubusercontent.com/tamtakoe/node-arjs-builder/master/docs/assets/network.png)
 
-It is clearly seen while the vendor is loading; all the resources of the project are almost loaded. We conclude that even for a large project, there is no point in lazy loading of the modules. Moreover, it will slow down the working of the site, because you will have to wait to download some really small file, if the user navigates to the other section (request of the first byte is very long). 
+It is clearly seen while the vendor is loading all the resources of the project are almost loaded.
+We conclude that even for a large project, there is no point in lazy loading of the modules.
+Moreover, it will slow down the working of the site, because you will have to wait to download some really small file, if the user navigates to the other page (request of the first byte is very long).
 Got rid of the necessity of the lazy load we just got rid of a headache with the connection of modules during the development. A double benefit. 
  
  
