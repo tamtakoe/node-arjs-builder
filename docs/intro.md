@@ -19,7 +19,7 @@ The second important file/files is common, which describes the General logic and
 Further, there are 10-20 modules for sections and different business logic. They often change, but weigh little (if the module is heavy, it means that there are pictures that should be put in the file server). 
 Let's see how will pass the first loading of an average project (gzip enabled):
 
-[chart]
+![network](https://raw.githubusercontent.com/tamtakoe/node-arjs-builder/master/docs/assets/network.png)
 
 It is clearly seen while the vendor is loading; all the resources of the project are almost loaded. We conclude that even for a large project, there is no point in lazy loading of the modules. Moreover, it will slow down the working of the site, because you will have to wait to download some really small file, if the user navigates to the other section (request of the first byte is very long). 
 Got rid of the necessity of the lazy load we just got rid of a headache with the connection of modules during the development. A double benefit. 
