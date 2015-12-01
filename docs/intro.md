@@ -73,25 +73,25 @@ package.json
 gulpfile.js 
 ```
 
-project1..3 — folders with projects. The project describes an isolated section of the site or a separate site.
+`project1..3` — folders with projects. The project describes an isolated section of the site or a separate site.
 Projects can be written in different frameworks or without them. For projects can be used as a general index.html as well as their own.
 In the mid-level application will be a minimum of three projects:
-main — main site
-admin — admin panel
-old-browser — plug for older browsers, written in the most primitive JS
+`main` — main site
+`admin` — admin panel
+`old-browser` — plug for older browsers, written in the most primitive JS
  
 In large applications, a lib project may appear which will contain the basic modules, which are used in other projects (routing, authorization, resource...). 
  
 In the individual projects you should make a new version of the website (in order to arrange a smooth transition), versions for A/B testing, temporary landing pages, etc.
  
-Files are placed in files that will not be inserted in CSS (the candidates for transferring to the file server). The rest will be converted to base64 and added to the styles, even if it is a 2GB video. Because the project only describes the interface, the content should come from other places. 
-In vendor libraries from bower are copied. 
-In a compiled are temporary files for local work (styles, vendor libraries). 
-In build there are the collected projects ready to download on the server. 
+`Files` are placed in files that will not be inserted in CSS (the candidates for transferring to the file server). The rest will be converted to base64 and added to the styles, even if it is a 2GB video. Because the project only describes the interface, the content should come from other places.
+In `vendor` libraries from bower are copied.
+In `compiled` are temporary files for local work (styles, vendor libraries).
+In `build` there are the collected projects ready to download on the server.
  
-Example index.html you can find here. It, as well as gulpfile.js changes never. To add scripts into it or connect Analytics through an array of scripts in the config or in the corresponding module in the project 
+Example `index.html` you can find [here](https://github.com/tamtakoe/node-arjs-builder/blob/master/demo/projects/index.html). It, as well as gulpfile.js changes never. To add scripts into it or connect Analytics through an array of scripts in the config or in the corresponding module in the project
  
-In lib.js there is a microframework the most essential methods that should be available before the download of the main framework. Such as: the definition of the browser, the locale of the user, loading scripts, etc. The idea is that there should be no need to change this file, but until it is so tweaked to ensure it. 
+In `lib.js` there is a microframework the most essential methods that should be available before the download of the main framework. Such as: the definition of the browser, the locale of the user, loading scripts, etc. The idea is that there should be no need to change this file, but until it is so tweaked to ensure it.
  
 Now let's consider a simplified structure of a single project: 
 
