@@ -103,9 +103,9 @@ _config/
 module1/ 
 ├──_tests 
 ├──someFolder1/ 
-│ ├──some.js 
-│ ├──style.sass 
-│ └──template.html 
+│   ├──some.js
+│   ├──style.sass
+│   └──template.html
 ├──someFolder2/ 
 └──config.js 
 module2/ 
@@ -116,16 +116,18 @@ requireconfig.js
 
 Let's go from the end. 
  
-requireconfig.js — connect the library files to the project 
-bootstrap.js — connect the project files. The standard scheme of work require.js 
-module1..3 modules of the project. During the Assembly each module is collected in a separate file 
-There are_tests in tests and they are related to files in the current folder. Tests deal with the files ending in spec.js. 
-config.js describes the dependence of the corresponding module 
-someFolder can have any structure  the most important point is that all dependencies must be described) 
-If near the script file is template.html or style.s/.sass/.scss/.less/.stylus, they will be added to cache templates or Stoneley stylesheet. A very simple rule. The collector does not drag anything, and takes only what belongs to the script file in the order in which scripts are loaded. 
+`requireconfig.js` — require the library files to the project
+`bootstrap.js` — require the project files. The standard scheme of work require.js
+`module1..3` modules of the project. Each module is compiled in a separate file in the build.
+`_tests` — folder with tests (*.spec.js).
+`config.js` describes the dependences of the corresponding module
+`someFolder` can have any structure (the most important point is that all dependencies must be described)
+If near the script file is template.html or style.s/.sass/.scss/.less/.stylus, they will be added to cache templates or compiled stylesheet.
+A very simple rule. The builder does not drag anything, and takes only what belongs to the script file in the order in which scripts are loaded.
  
-The most interesting _config 
-Here are stored the configuration for different environments. Supported formats are json, json5, hjson, cson, yaml. As soon as the IDE starts to support json5, I will translate all the examples to it and leave it to be the only supported format. The common for all the environments settings are described in Default. Other configs ___________ to default. 
+The most interesting `_config`. Here are stored the configuration for different environments.
+Supported formats are json, json5, hjson, cson, yaml. As soon as the IDE starts to support json5, I will translate all the examples to it and leave it to be the only supported format.
+The common for all the environments settings are described in `default`. Other configs merge to `default`.
  
 To build the project with the right config you need to specify the name of the first parameter
 
@@ -134,7 +136,7 @@ gulp --qa
 gulp build --production 
 ```
 
-The default dev.
+The default `dev`.
  
 Configuration file structure:
 
@@ -156,4 +158,7 @@ Configuration file structure:
 } 
 ```
 
-The config is probably the most difficult that is in the collector. It is better to look at the more difficult sample applications in order to imagine it, or the easy way - look everything in the documentation.
+The config is probably the most difficult that is in the builder.
+It is better to look demo applications:
+[simple demo](https://github.com/tamtakoe/node-arjs-builder/tree/master/demo),
+[big demo](https://github.com/tamtakoe/node-arjs-builder-seed).
