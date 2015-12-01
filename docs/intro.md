@@ -44,10 +44,15 @@ Got rid of the necessity of the lazy load we just got rid of a headache with the
  
 ##The build for the development
  
-The architecture of the project involves the use of AMD modules, because they are supported by the browser. Therefore, there is no need to build scripts in the development (no build — no headaches). Of course, this decision is also the fastest. For the same reason, none of HTML template engines is not supported. According to a reasonable approach for building of the application, you will not have templates of more than 100 lines, and the native HTML knows and reads any web developer. Only styles compile, besides css, less, sass, scss, stylus are supported. You don't need to put any plugins, everything works out of the box — just write code. 
-The collector makes it easy to do builds for the libraries that support modularity (Bootstrap, Angular Bootstrap, jQuery, Moment, Lodash, etc.), just not to drag in the project unnecessary things. 
- 
-The basic architecture of the project 
+The architecture of the project involves the use of AMD modules, because they are supported by the browser. Therefore, there is no need to build scripts in the development (no build — no headaches).
+Of course, this decision is also the fastest. For the same reason, none of HTML template engines is not supported.
+According to a reasonable approach for building of the application, you will not have templates of more than 100 lines, and the native HTML knows and reads any web developer.
+Builder compiles only the styles (css, less, sass, scss, stylus are supported). You don't need to use any plugins, everything works out of the box — just write code.
+The builder makes it easy to do builds for the libraries that support modularity (Bootstrap, Angular Bootstrap, jQuery, Moment, Lodash, etc.), just not to drag in the project unnecessary things.
+
+
+##The basic architecture of the project
+
 The working directory of your app will have the following structure: 
 
 ```
@@ -68,14 +73,16 @@ package.json
 gulpfile.js 
 ```
 
-project1..3 — folders with projects. The project describes an isolated section of the site or a separate site. Projects can be written in different frameworks or without them. For projects can be used as a General index.html as well as their own. In the mid-level application will be a minimum of three projects: 
-main — main site 
-admin — admin panel 
-old-browser — plug for older browsers, written in the most primitive JS 
+project1..3 — folders with projects. The project describes an isolated section of the site or a separate site.
+Projects can be written in different frameworks or without them. For projects can be used as a general index.html as well as their own.
+In the mid-level application will be a minimum of three projects:
+main — main site
+admin — admin panel
+old-browser — plug for older browsers, written in the most primitive JS
  
 In large applications, a lib project may appear which will contain the basic modules, which are used in other projects (routing, authorization, resource...). 
  
-In the individual projects you should make a new version of the website (in order to arrange a smooth transition), Assembly for A/B testing, temporary landing GM pages, etc. 
+In the individual projects you should make a new version of the website (in order to arrange a smooth transition), versions for A/B testing, temporary landing pages, etc.
  
 Files are placed in files that will not be inserted in CSS (the candidates for transferring to the file server). The rest will be converted to base64 and added to the styles, even if it is a 2GB video. Because the project only describes the interface, the content should come from other places. 
 In vendor libraries from bower are copied. 
