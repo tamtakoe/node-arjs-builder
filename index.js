@@ -35,6 +35,7 @@ var defaults = {
     buildDir:         'build',
     filesDir:         'files',
     vendorDir:        'vendor',
+    indexFile:        'index.js',
     maxListeners:     100,
     browsers:         ['chrome >= 35', 'ff >= 20', 'safari >= 7', 'ie >= 10', 'opera >= 12.10', 'android >= 4.4', 'ios >= 7', 'phantomjs >= 1.9']
 };
