@@ -69,8 +69,12 @@ Return instance of builder
   Assets (big images, fonts, video) which don't include into css-files. Better to store on a separate file server
 
 - **vendorDir** (`String`)  
-  Default: `'vendor'`  
+  Default: `'vendor'`
   Vendor libraries (f.e. from bower)
+
+- **moduleIndexFile** (`String`)
+  Default: `'index.js'`
+  Name of main module file (in which will be place templates and cache module dependencies)
 
 - **maxListeners** (`Integer`)  
   Default: `100`  
@@ -429,8 +433,13 @@ Has structure like `modules`. You can compile custom bundles of vendors
   Replace `@import` on the css content. See [cssimport config](https://github.com/unlight/gulp-cssimport)
 
 - **inlineImgToCss** (`Boolean`/`Object`)  
-  Default: `true` (`baseDir: <baseUrl>, maxImageSize: Infinity, exclude: [new RegExp('^[\"\']?((http|https|\/\/)|\/?' + <filesDir> +  ')')]`)  
-  Inline resources to css in base64. See [base64 config](https://github.com/Wenqer/gulp-base64)
+  Default: `true` (`baseDir: <baseUrl>, maxImageSize: Infinity, exclude: [new RegExp('^[\"\']?((http|https|\/\/)|[.\/]*' + <filesDir> +  ')')]`)
+  Inline resources to css in base64. See [base64 config](https://github.com/Wenqer/gulp-base64). Also uou can use extra parameters:
+  - `excludeFilesStartWith` (`String` or `Array`) - First path segment of url
+  - `excludeFilesByRegexp` (`String` or `Array`) - Filtrating regexp
+
+- **cssUrlPrefix** (`String`)
+  Prefix for resources urls in css
 
 - **stylus** (`Object`)  
   Default: `{'include-css': true}`  

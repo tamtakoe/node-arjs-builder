@@ -1,7 +1,7 @@
 {
   "name": "arjs-builder",
   "description": "Builder for AngularJS + RequireJS projects",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "author": {
     "name": "tamtakoe",
     "email": "tamtakoe@gmail.com"
@@ -44,6 +44,7 @@
     "stream-series": "^0.1.1",
     "through2": "^2.0.0",
     "webserver-lite": "^0.0.1",
+    "postcss-url-mapper": "^1.0.2",
 
     "jasmine-core": "^2.4.1",
     "jasmine-jquery": "^2.1.1",
@@ -77,6 +78,7 @@
     "gulp-ng-annotate-plus": "^2.0.0",
     "gulp-util": "^3.0.7",
     "gulp-uglify": "^1.5.3",
+    "gulp-postcss": "^6.1.0",
     "gulp-rev": "^7.0.0",
     "gulp-watch": "^4.3.5",
     "gulp-wrap": "^0.11.0"

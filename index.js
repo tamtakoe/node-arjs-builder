@@ -35,7 +35,7 @@ var defaults = {
     buildDir:         'build',
     filesDir:         'files',
     vendorDir:        'vendor',
-    indexFile:        'index.js',
+    moduleIndexFile:  'index.js',
     maxListeners:     100,
     browsers:         ['chrome >= 35', 'ff >= 20', 'safari >= 7', 'ie >= 10', 'opera >= 12.10', 'android >= 4.4', 'ios >= 7', 'phantomjs >= 1.9']
 };
@@ -158,6 +158,10 @@ function createBuilder(options) {
                     minifyCss: false,
                     combine: 'style',
                     styles: config.build.styles,
+                    less:   config.build.less,
+                    scss:   config.build.scss,
+                    sass:   config.build.sass,
+                    stylus: config.build.stylus,
                     cache: moduleName
                 }, opts)))
                 .pipe(msg.flush.info('', projectName + ' styles compiled', '-'))
