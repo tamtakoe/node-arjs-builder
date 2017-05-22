@@ -1,7 +1,7 @@
 {
   "name": "arjs-builder",
   "description": "Builder for AngularJS + RequireJS projects",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "author": {
     "name": "tamtakoe",
     "email": "tamtakoe@gmail.com"
@@ -45,7 +45,6 @@
     "through2": "^2.0.3",
     "webserver-lite": "^0.0.2",
     "postcss-url-mapper": "^1.0.2",
-
     "jasmine-core": "^2.6.2",
     "jasmine-jquery": "^2.1.1",
     "karma": "^1.7.0",
@@ -55,7 +54,6 @@
     "karma-phantomjs-launcher": "^1.0.4",
     "karma-requirejs": "^1.1.0",
     "karma-requirejs-preprocessor": "^0.0.1",
-
     "gulp": "^3.9.0",
     "gulp-add-imported-styles": "^0.0.4",
     "gulp-amd": "^0.0.2",
