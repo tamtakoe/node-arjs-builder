@@ -70,7 +70,7 @@
     "gulp-if": "^2.0.2",
     "gulp-livereload": "^3.8.1",
     "gulp-mark": "^0.0.2",
-    "gulp-msg": "^0.0.3",
+    "gulp-msg": "^0.0.4",
     "gulp-minify-css": "^1.2.4",
     "gulp-minify-html": "^1.0.6",
     "gulp-ng-annotate-plus": "^2.0.1",
