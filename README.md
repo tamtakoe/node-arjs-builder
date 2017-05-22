@@ -71,6 +71,10 @@ Return instance of builder
 - **vendorDir** (`String`)  
   Default: `'vendor'`
   Vendor libraries (f.e. from bower)
+  
+- **testVendorDir** (`String`)  
+    Default: `'vendor'`
+    Vendor libraries for tests (f.e. from bower)
 
 - **moduleIndexFile** (`String`)
   Default: `'index.js'`

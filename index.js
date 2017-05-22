@@ -35,6 +35,7 @@ var defaults = {
     buildDir:         'build',
     filesDir:         'files',
     vendorDir:        'vendor',
+    testVendorDir:    'vendor',
     moduleIndexFile:  'index.js',
     maxListeners:     100,
     browsers:         ['chrome >= 35', 'ff >= 20', 'safari >= 7', 'ie >= 10', 'opera >= 12.10', 'android >= 4.4', 'ios >= 7', 'phantomjs >= 1.9']
@@ -293,8 +294,8 @@ function createBuilder(options) {
                 config: {
                     baseUrl: '/base/' + opts.projectsDir + '/',
                     paths: {
-                        angular: opts.vendorDir + '/angular/angular', //for no-angular projects
-                        angularMocks: opts.vendorDir + '/angular-mocks/angular-mocks'
+                        angular: opts.testVendorDir + '/angular/angular', //for no-angular projects
+                        angularMocks: opts.testVendorDir + '/angular-mocks/angular-mocks'
                     },
                     shim:  {
                         angularMocks: ['angular']
@@ -305,7 +306,7 @@ function createBuilder(options) {
                 }
             },
             exclude: [
-                opts.projectsDir + '/' + opts.vendorDir + '/**/*spec.js'
+                opts.projectsDir + '/' + opts.testVendorDir + '/**/*spec.js'
             ]
         };
 
@@ -336,7 +337,7 @@ function createBuilder(options) {
             }
 
             karmaConfig.files = [
-                {pattern: opts.projectsDir + '/' + opts.vendorDir + '/**/*.js', included: false, watched: false},
+                {pattern: opts.projectsDir + '/' + opts.testVendorDir + '/**/*.js', included: false, watched: false},
                 {pattern: opts.projectsDir + '/' + opts.compiledDir + '/' + projectName + '/**/*.js', included: false, watched: false},
                 {pattern: opts.projectsDir + '/' + projectName + '/**/!(requireconfig).js', included: false},
                 {pattern: opts.projectsDir + '/' + projectName + '/**/*.html', included: false},
