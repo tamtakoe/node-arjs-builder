@@ -1,7 +1,7 @@
 {
   "name": "arjs-builder",
   "description": "Builder for AngularJS + RequireJS projects",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "author": {
     "name": "tamtakoe",
     "email": "tamtakoe@gmail.com"
