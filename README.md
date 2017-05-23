@@ -438,7 +438,7 @@ Has structure like `modules`. You can compile custom bundles of vendors
 
 - **inlineImgToCss** (`Boolean`/`Object`)  
   Default: `true` (`baseDir: <baseUrl>, maxImageSize: Infinity, exclude: [new RegExp('^[\"\']?((http|https|\/\/)|[.\/]*' + <filesDir> +  ')')]`)
-  Inline resources to css in base64. See [base64 config](https://github.com/Wenqer/gulp-base64). Also uou can use extra parameters:
+  Inline resources to css in base64. See [base64 config](https://github.com/Wenqer/gulp-base64). Also you can use extra parameters:
   - `excludeFilesStartWith` (`String` or `Array`) - First path segment of url
   - `excludeFilesByRegexp` (`String` or `Array`) - Filtrating regexp
 

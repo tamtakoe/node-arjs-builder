@@ -35,7 +35,7 @@ var defaults = {
     buildDir:         'build',
     filesDir:         'files',
     vendorDir:        'vendor',
-    testVendorDir:    'vendor',
+    testVendorDir:    'node_modules',
     moduleIndexFile:  'index.js',
     maxListeners:     100,
     browsers:         ['chrome >= 35', 'ff >= 20', 'safari >= 7', 'ie >= 10', 'opera >= 12.10', 'android >= 4.4', 'ios >= 7', 'phantomjs >= 1.9']
@@ -48,6 +48,11 @@ function createBuilder(options) {
     opts.compiledPath = path.join(opts.projectsPath, opts.compiledDir);
     opts.buildPath    = path.join(opts.projectsPath, opts.buildDir);
     opts.projectsDir  = path.basename(opts.projectsPath);
+
+    //TODO refactor it
+    if (rootPath === opts.projectsPath) {
+        opts.projectsDir = '';
+    }
 
     events.EventEmitter.prototype._maxListeners = opts.maxListeners;
 
@@ -278,6 +283,7 @@ function createBuilder(options) {
     }
 
     function test(done) {
+        var projectsDir = opts.projectsDir ? opts.projectsDir + '/' : '';
         var karmaConfigPath = opts.karmaConfigPath;
         var karmaConfig     = {
             frameworks: ['jasmine-jquery', 'jasmine', 'requirejs'],
@@ -292,7 +298,7 @@ function createBuilder(options) {
             ],
             requirejsPreprocessor: {
                 config: {
-                    baseUrl: '/base/' + opts.projectsDir + '/',
+                    baseUrl: '/base/' + projectsDir,
                     paths: {
                         angular: opts.testVendorDir + '/angular/angular', //for no-angular projects
                         angularMocks: opts.testVendorDir + '/angular-mocks/angular-mocks'
@@ -306,7 +312,7 @@ function createBuilder(options) {
                 }
             },
             exclude: [
-                opts.projectsDir + '/' + opts.testVendorDir + '/**/*spec.js'
+                opts.testVendorDir + '/**/*spec.js'
             ]
         };
 
@@ -332,23 +338,25 @@ function createBuilder(options) {
         startKarmaServers();
 
         function createKarmaServer(projectName, done) {
+            var projectsDir = opts.projectsDir ? opts.projectsDir + '/' : '';
+
             if (!karmaConfig.browsers) {
                 karmaConfig.browsers = ['PhantomJS'];
             }
 
             karmaConfig.files = [
-                {pattern: opts.projectsDir + '/' + opts.testVendorDir + '/**/*.js', included: false, watched: false},
-                {pattern: opts.projectsDir + '/' + opts.compiledDir + '/' + projectName + '/**/*.js', included: false, watched: false},
-                {pattern: opts.projectsDir + '/' + projectName + '/**/!(requireconfig).js', included: false},
-                {pattern: opts.projectsDir + '/' + projectName + '/**/*.html', included: false},
-                opts.projectsDir + '/' + opts.compiledDir +'/manifests.js',
-                opts.projectsDir + '/lib.js',
+                {pattern: opts.testVendorDir + '/**/*.js', included: false, watched: false},
+                {pattern: opts.compiledDir + '/' + projectName + '/**/*.js', included: false, watched: false},
+                {pattern: projectsDir + projectName + '/**/!(requireconfig).js', included: false},
+                {pattern: projectsDir + projectName + '/**/*.html', included: false},
+                projectsDir + opts.compiledDir +'/manifests.js',
+                projectsDir + 'lib.js',
                 // needs to be last http://karma-runner.github.io/0.12/plus/requirejs.html
-                opts.projectsDir + '/' + projectName + '/requireconfig.js'
+                projectsDir + projectName + '/requireconfig.js'
             ];
             karmaConfig.preprocessors = {};
-            karmaConfig.preprocessors[opts.projectsDir + '/' + projectName + '/**/*.html'] = 'ng-html2js';
-            karmaConfig.preprocessors[opts.projectsDir + '/' + projectName + '/requireconfig.js'] = 'requirejs';
+            karmaConfig.preprocessors[projectsDir + projectName + '/**/*.html'] = 'ng-html2js';
+            karmaConfig.preprocessors[projectsDir + projectName + '/requireconfig.js'] = 'requirejs';
 
             return new karma.Server(karmaConfig, done);
         }
